@@ -62,180 +62,96 @@ namespace Microsoft.Bot.Sample.LuisBot
         }
 
         [LuisIntent("Note.Create")]
-
         public Task NoteCreateIntent(IDialogContext context, LuisResult result)
-
         {
-
             EntityRecommendation title;
-
             if (!result.TryFindEntity(Entity_Note_Title, out title))
-
             {
-
                 // Prompt the user for a note title
-
                 PromptDialog.Text(context, After_TitlePrompt, "What is the title of the note you want to create?");
-
             }
-
             else
-
             {
-
                 var note = new Note() { Title = title.Entity };
-
                 noteToCreate = this.noteByTitle[note.Title] = note;
-
                 // Prompt the user for what they want to say in the note
-
                 PromptDialog.Text(context, After_TextPrompt, "What do you want to say in your note?");
-
             }
-
             return Task.CompletedTask;
-
         }
 
         private async Task After_TitlePrompt(IDialogContext context, IAwaitable<string> result)
-
         {
-
             EntityRecommendation title;
-
             // Set the title (used for creation, deletion, and reading)
-
             currentTitle = await result;
-
             if (currentTitle != null)
-
             {
-
                 title = new EntityRecommendation(type: Entity_Note_Title) { Entity = currentTitle };
-
             }
-
             else
-
             {
-
                 // Use the default note title
-
                 title = new EntityRecommendation(type: Entity_Note_Title) { Entity = DefaultNoteTitle };
-
             }
-
             // Create a new note object
-
             var note = new Note() { Title = title.Entity };
-
             // Add the new note to the list of notes and also save it in order to add text to it later
-
             noteToCreate = this.noteByTitle[note.Title] = note;
-
             // Prompt the user for what they want to say in the note
-
             PromptDialog.Text(context, After_TextPrompt, "What do you want to say in your note?");
-
         }
-
         [LuisIntent("Note.ReadAloud")]
-
         public async Task NoteReadAloudIntent(IDialogContext context, LuisResult result)
-
         {
-
             Note note;
-
             if (TryFindNote(result, out note))
-
             {
-
                 await context.PostAsync($"**{note.Title}**: {note.Text}.");
-
             }
-
             else
-
             {
-
                 // Print out all the notes if no specific note name was detected
-
                 string NoteList = "Here's the list of all notes: \n\n";
-
                 foreach (KeyValuePair<string, Note> entry in noteByTitle)
-
                 {
-
                     Note noteInList = entry.Value;
-
                     NoteList += $"**{noteInList.Title}**: {noteInList.Text}.\n\n";
-
                 }
-
                 await context.PostAsync(NoteList);
-
             }
-
             context.Wait(MessageReceived);
-
         }
 
         public bool TryFindNote(string noteTitle, out Note note)
-
         {
-
             // TryGetValue returns false if no match is found.
-
             bool foundNote = this.noteByTitle.TryGetValue(noteTitle, out note);
-
             return foundNote;
-
         }
 
         public bool TryFindNote(LuisResult result, out Note note)
-
         {
-
             note = null;
-
             string titleToFind;
-
             EntityRecommendation title;
-
             if (result.TryFindEntity(Entity_Note_Title, out title))
-
             {
-
                 titleToFind = title.Entity;
-
             }
-
             else
-
             {
-
-                titleToFind = DefaultNoteTitle;
-
+               titleToFind = DefaultNoteTitle;
             }
-
             // TryGetValue returns false if no match is found.
-
             return this.noteByTitle.TryGetValue(titleToFind, out note);
-
         }
         private async Task After_TextPrompt(IDialogContext context, IAwaitable<string> result)
-
         {
-
             // Set the text of the note
-
             noteToCreate.Text = await result;
-
             await context.PostAsync($"Created note **{this.noteToCreate.Title}** that says \"{this.noteToCreate.Text}\".");
-
             context.Wait(MessageReceived);
-
         }
 
 
@@ -267,7 +183,7 @@ namespace Microsoft.Bot.Sample.LuisBot
 
         private async Task ShowLuisResult(IDialogContext context, LuisResult result) 
         {
-            await context.PostAsync($"You have reached {result.Intents[0].Intent}. You said: {result.Query}");
+            await context.PostAsync($"Howdy, You have reached {result.Intents[0].Intent}. You said: {result.Query}");
             context.Wait(MessageReceived);
         }
     }
