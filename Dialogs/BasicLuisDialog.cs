@@ -169,12 +169,33 @@ namespace Microsoft.Bot.Sample.LuisBot
             await this.ShowLuisResult(context, result);
         }
 
+        // Name of note title entity
+
+        public const string Entity_DiceType = "DiceType";
+
+        public const string Entity_Number = "number";
+
         [LuisIntent("Dice.Roll")]
         public async Task Roll(IDialogContext context, LuisResult result)
         {
+            string DType = null;
+            EntityRecommendation DiceType;
+            if (result.TryFindEntity(Entity_Note_Title, out DiceType))
+            {
+                DType = DiceType.Entity;
+            }
+
+            string DNumber = null;
+            EntityRecommendation Number;
+            if (result.TryFindEntity(Entity_Number, out Number))
+            {
+                DType = Number.Entity;
+            }
+            
+
             Random rand = new Random();
 
-            await context.PostAsync($"Howdy, I'm Roll a dice {rand.Next()}");
+            await context.PostAsync($"Howdy, I'm Rolling a dice {rand.NextDouble() * 20} Dice Type: {DType}, Number: {DNumber}");
             context.Wait(MessageReceived);
         }
         [LuisIntent("Cancel")]
