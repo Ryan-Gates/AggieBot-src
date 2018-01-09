@@ -169,6 +169,14 @@ namespace Microsoft.Bot.Sample.LuisBot
             await this.ShowLuisResult(context, result);
         }
 
+        [LuisIntent("Dice.Roll")]
+        public async Task Roll(IDialogContext context, LuisResult result)
+        {
+            Random rand = new Random();
+
+            await context.PostAsync($"Howdy, I'm Roll a dice {rand.Next()}");
+            context.Wait(MessageReceived);
+        }
         [LuisIntent("Cancel")]
         public async Task CancelIntent(IDialogContext context, LuisResult result)
         {
