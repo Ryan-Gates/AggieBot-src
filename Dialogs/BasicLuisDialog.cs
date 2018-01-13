@@ -6,6 +6,7 @@ using Microsoft.Bot.Builder.Dialogs;
 using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using System.Collections.Generic;
+using LuisBot.Dice;
 
 namespace Microsoft.Bot.Sample.LuisBot
 {
@@ -173,7 +174,7 @@ namespace Microsoft.Bot.Sample.LuisBot
 
         public const string Entity_DiceType = "DiceType";
 
-        public const string Entity_Number = "number";
+        public const string Entity_Number = "builtin.number";
 
         [LuisIntent("Dice.Roll")]
         public async Task Roll(IDialogContext context, LuisResult result)
@@ -195,7 +196,8 @@ namespace Microsoft.Bot.Sample.LuisBot
 
             Random rand = new Random();
 
-            await context.PostAsync($"Howdy, I'm Rolling a dice {rand.NextDouble() * 20} Dice Type: {DType}, Number: {DNumber}");
+            int DiceValue = Dice.ConvertTypeToInt(DType);
+            await context.PostAsync($"Howdy, I'm Rolling a dice {Math.Floor(rand.NextDouble() * DiceValue)} Dice Type: {DType}, Number: {DNumber}");
             context.Wait(MessageReceived);
         }
 
