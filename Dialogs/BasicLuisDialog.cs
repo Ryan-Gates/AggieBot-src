@@ -180,7 +180,7 @@ namespace Microsoft.Bot.Sample.LuisBot
         {
             string DType = null;
             EntityRecommendation DiceType;
-            if (result.TryFindEntity(Entity_Note_Title, out DiceType))
+            if (result.TryFindEntity(Entity_DiceType, out DiceType))
             {
                 DType = DiceType.Entity;
             }
@@ -189,7 +189,7 @@ namespace Microsoft.Bot.Sample.LuisBot
             EntityRecommendation Number;
             if (result.TryFindEntity(Entity_Number, out Number))
             {
-                DType = Number.Entity;
+                DNumbe = Number.Entity;
             }
             
 
@@ -198,6 +198,7 @@ namespace Microsoft.Bot.Sample.LuisBot
             await context.PostAsync($"Howdy, I'm Rolling a dice {rand.NextDouble() * 20} Dice Type: {DType}, Number: {DNumber}");
             context.Wait(MessageReceived);
         }
+
         [LuisIntent("Cancel")]
         public async Task CancelIntent(IDialogContext context, LuisResult result)
         {
