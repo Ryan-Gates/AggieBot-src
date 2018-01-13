@@ -189,7 +189,7 @@ namespace Microsoft.Bot.Sample.LuisBot
             EntityRecommendation Number;
             if (result.TryFindEntity(Entity_Number, out Number))
             {
-                DNumbe = Number.Entity;
+                DNumber = Number.Entity;
             }
             
 
