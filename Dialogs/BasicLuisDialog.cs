@@ -176,6 +176,7 @@ namespace Microsoft.Bot.Sample.LuisBot
 
         public const string Entity_Number = "builtin.number";
 
+        public const string Roll_MessageStart = "Howdy, I've Rolled: \n";
         [LuisIntent("Dice.Roll")]
         public async Task Roll(IDialogContext context, LuisResult result)
         {
@@ -197,7 +198,20 @@ namespace Microsoft.Bot.Sample.LuisBot
             Random rand = new Random();
 
             int DiceValue = Dice.ConvertTypeToInt(DType);
-            await context.PostAsync($"Howdy, I'm Rolling a dice {Math.Floor(rand.NextDouble() * DiceValue)} Dice Type: {DType}, Number: {DNumber}");
+
+            String Message = "";
+
+            int NumDice = 1;
+            if (DNumber != null)
+            {
+                NumDice = int.Parse(DNumber);
+            }
+
+            for(int i =0; i <NumDice; i++)
+            {
+                Message += " " + Math.Ceiling(rand.NextDouble() * DiceValue);
+            }
+            await context.PostAsync($"{Roll_MessageStart} {Message} Dice Type: {DType}, Number: {DNumber}");
             context.Wait(MessageReceived);
         }
 
