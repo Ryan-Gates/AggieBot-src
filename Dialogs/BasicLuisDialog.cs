@@ -215,6 +215,29 @@ namespace Microsoft.Bot.Sample.LuisBot
             context.Wait(MessageReceived);
         }
 
+        [LuisIntent("Image.Caption")]
+        public async Task ImageIntent(IDialogContext context, LuisResult result)
+        {
+            PromptDialog.Text(context, TestIfURL, "What is the Image you want me to check?");
+        }
+
+        private async Task TestIfURL(IDialogContext context, IAwaitable<string> result)
+        {
+            string url = await result;
+            if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
+            {
+                // string desc = await this.captionService.GetCaptionAsync(url);
+                await context.PostAsync($"hmm");
+                context.Wait(MessageReceived);
+            }
+            else
+            {
+                await context.PostAsync($"Sorry that wasn't a good URL, please try again");
+                context.Wait(MessageReceived);
+            }
+
+        }
+
         [LuisIntent("Cancel")]
         public async Task CancelIntent(IDialogContext context, LuisResult result)
         {
