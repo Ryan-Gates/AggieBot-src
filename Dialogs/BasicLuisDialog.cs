@@ -229,7 +229,7 @@ namespace Microsoft.Bot.Sample.LuisBot
             {
                  ICaptionService captionService = new MicrosoftCognitiveCaptionService();
                 string desc = await captionService.GetCaptionAsync(url);
-                await context.PostAsync($"Test Test");
+                await context.PostAsync($"{desc}");
                 context.Wait(MessageReceived);
             }
             else
