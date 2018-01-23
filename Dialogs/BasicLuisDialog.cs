@@ -22,8 +22,6 @@ namespace Microsoft.Bot.Sample.LuisBot
         {
         }
 
-        private readonly ICaptionService captionService = new MicrosoftCognitiveCaptionService();
-
         private readonly Dictionary<string, Note> noteByTitle = new Dictionary<string, Note>();
 
         private Note noteToCreate;
@@ -229,8 +227,9 @@ namespace Microsoft.Bot.Sample.LuisBot
             string url = await result;
             if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
             {
-                string desc = await this.captionService.GetCaptionAsync(url);
-                await context.PostAsync($"{desc}");
+                 ICaptionService captionService = new MicrosoftCognitiveCaptionService();
+                string desc = await captionService.GetCaptionAsync(url);
+                await context.PostAsync($"Test Test");
                 context.Wait(MessageReceived);
             }
             else
