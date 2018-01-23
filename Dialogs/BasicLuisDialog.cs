@@ -7,6 +7,7 @@ using Microsoft.Bot.Builder.Luis;
 using Microsoft.Bot.Builder.Luis.Models;
 using System.Collections.Generic;
 using LuisBot.Dice;
+using ImageCaption.Services;
 
 namespace Microsoft.Bot.Sample.LuisBot
 {
@@ -20,6 +21,8 @@ namespace Microsoft.Bot.Sample.LuisBot
             domain: ConfigurationManager.AppSettings["LuisAPIHostName"])))
         {
         }
+
+        private readonly ICaptionService captionService = new MicrosoftCognitiveCaptionService();
 
         private readonly Dictionary<string, Note> noteByTitle = new Dictionary<string, Note>();
 
@@ -226,8 +229,8 @@ namespace Microsoft.Bot.Sample.LuisBot
             string url = await result;
             if (Uri.IsWellFormedUriString(url, UriKind.Absolute))
             {
-                // string desc = await this.captionService.GetCaptionAsync(url);
-                await context.PostAsync($"hmm");
+                string desc = await this.captionService.GetCaptionAsync(url);
+                await context.PostAsync($"{desc}");
                 context.Wait(MessageReceived);
             }
             else
