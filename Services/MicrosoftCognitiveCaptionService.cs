@@ -1,5 +1,6 @@
 ﻿namespace ImageCaption.Services
 {
+    using System.Configuration;
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
@@ -19,7 +20,7 @@
         /// <summary>
         /// Microsoft Computer Vision API key.
         /// </summary>
-        private static readonly string ApiKey = WebConfigurationManager.AppSettings["MicrosoftVisionApiKey"];
+        private static readonly string ApiKey = ConfigurationManager.AppSettings["MicrosoftVisionApiKey"];
 
         /// <summary>
         /// The set of visual features we want from the Vision API.
